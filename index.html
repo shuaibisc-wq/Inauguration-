@@ -1,1 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIVE: Waiting for the Magic</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body, html {
+            width: 100%; height: 100%;
+            /* Soft romantic dark starry chocolate background */
+            background: radial-gradient(circle at top right, #2a1625 0%, #0d1128 50%, #020108 100%);
+            color: #ffffff; overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* ---------------- ALL TIME VISIBLE BADGES ---------------- */
+        .top-badges {
+            position: fixed; top: 0; left: 0; width: 100%; 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 25px; z-index: 100; pointer-events: none;
+        }
+
+        .live-indicator {
+            font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 600;
+            color: #ff4d4d; display: flex; align-items: center; gap: 8px;
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.6); letter-spacing: 2px;
+        }
+
+        .red-dot {
+            width: 12px; height: 12px; background: #ff4d4d;
+            border-radius: 50%; box-shadow: 0 0 12px #ff4d4d;
+            animation: blink 1s infinite;
+        }
+
+        .realtime-clock {
+            font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 500;
+            color: #e8d0c3; letter-spacing: 2px; text-shadow: 0 0 10px rgba(232, 208, 195, 0.5);
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* ---------------- START SCREEN ---------------- */
+        #start-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #020108; z-index: 200; display: flex;
+            flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        }
+        .init-btn {
+            background: transparent; border: 1px solid #e8d0c3; color: #e8d0c3;
+            padding: 15px 40px; font-family: 'Cinzel', serif;
+            font-size: 1.2rem; letter-spacing: 3px; cursor: pointer;
+            transition: 0.3s; border-radius: 30px; box-shadow: 0 0 15px rgba(232, 208, 195, 0.2);
+        }
+        .init-btn:hover { background: rgba(232, 208, 195, 0.1); box-shadow: 0 0 30px rgba(232, 208, 195, 0.5); }
+
+        /* ---------------- PHASE 1: COUNTDOWN ---------------- */
+        #countdown-phase {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 10; transition: opacity 2s ease-in-out; display: none; padding: 20px;
+        }
+        
+        .title-text {
+            font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 5vw, 2.5rem);
+            color: #e8d0c3; letter-spacing: 5px; margin-bottom: 30px; 
+            text-align: center; text-shadow: 0 0 15px rgba(232, 208, 195, 0.4);
+        }
+
+        .timer-container { 
+            display: flex; flex-wrap: wrap; justify-content: center; 
+            gap: clamp(10px, 3vw, 25px); margin-bottom: 40px; 
+        }
+
+        .time-box {
+            background: rgba(42, 22, 37, 0.3);
+            border: 1px solid rgba(232, 208, 195, 0.2);
+            padding: clamp(15px, 3vw, 25px); border-radius: 12px; 
+            backdrop-filter: blur(8px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            min-width: clamp(70px, 20vw, 120px); text-align: center;
+        }
+
+        .time-box span {
+            display: block; font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 8vw, 4rem); font-weight: 600; color: #fffdf0;
+        }
+
+        .time-box .label {
+            font-family: 'Montserrat', sans-serif; font-size: clamp(0.7rem, 2vw, 0.9rem);
+            letter-spacing: 2px; color: #a49188; margin-top: 5px; text-transform: uppercase;
+        }
+
+        /* Romantic Quote Box (Anti-Boredom) */
+        .quote-box {
+            width: 100%; max-width: 650px; min-height: 120px;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(232, 208, 195, 0.15);
+            padding: 25px; border-radius: 15px; text-align: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            backdrop-filter: blur(10px); box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .quote-text {
+            font-family: 'Playfair Display', serif; font-size: clamp(1rem, 3vw, 1.3rem);
+            font-style: italic; color: #e8d0c3; line-height: 1.6;
+            opacity: 0; transition: opacity 1.5s ease-in-out;
+        }
+        .quote-author {
+            font-family: 'Montserrat', sans-serif; font-size: 0.85rem; 
+            color: #a49188; margin-top: 15px; letter-spacing: 2px;
+            opacity: 0; transition: opacity 1.5s ease-in-out; text-transform: uppercase;
+        }
+        .show-quote { opacity: 1 !important; }
+
+        /* ---------------- PHASE 2: CELEBRATION ---------------- */
+        #celebration-phase {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 20; background: radial-gradient(circle at center, #1b0a15 0%, #000000 100%);
+            opacity: 0; transition: opacity 3s ease-in-out; text-align: center;
+        }
+
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 21; pointer-events: none; }
+
+        .message-box {
+            z-index: 30; font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 5vw, 3rem); font-style: italic; color: #e8d0c3;
+            text-shadow: 0 0 20px rgba(232, 208, 195, 0.4);
+            padding: 20px; opacity: 0; transform: scale(0.95);
+            transition: all 2s ease-in-out; max-width: 90%; line-height: 1.5;
+        }
+        .message-box.show { opacity: 1; transform: scale(1); }
+
+        .gateway-btn {
+            position: absolute; bottom: 15%; z-index: 40; background: transparent;
+            border: 1px solid #e8d0c3; color: #e8d0c3; padding: 15px 35px;
+            font-size: clamp(0.9rem, 3vw, 1.1rem); font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase; letter-spacing: 4px; border-radius: 50px;
+            cursor: pointer; opacity: 0; pointer-events: none; transition: all 1.5s ease;
+            text-decoration: none; box-shadow: 0 0 15px rgba(232, 208, 195, 0.2);
+        }
+        .gateway-btn.reveal { opacity: 1; pointer-events: auto; }
+        .gateway-btn:hover { background: rgba(232, 208, 195, 0.15); box-shadow: 0 0 30px rgba(232, 208, 195, 0.6); color: #ffffff; }
+
+        #ambient-stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Beautiful Soft Piano Music -->
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Always Visible Badges -->
+    <div class="top-badges">
+        <div class="live-indicator"><div class="red-dot"></div> LIVE</div>
+        <div class="realtime-clock" id="clock-display">00:00:00</div>
+    </div>
+
+    <!-- START SCREEN -->
+    <div id="start-screen">
+        <button class="init-btn" onclick="startSystem()">Enter the Universe</button>
+        <p style="margin-top: 25px; font-family: 'Montserrat'; font-size: 0.8rem; color: #888; letter-spacing: 1px;">Turn on your device volume</p>
+    </div>
+
+    <canvas id="ambient-stars"></canvas>
+
+    <!-- PHASE 1: COUNTDOWN -->
+    <div id="countdown-phase">
+        <div class="title-text">Waiting for Midnight</div>
+        <div class="timer-container">
+            <div class="time-box"><span id="days">00</span><div class="label">Days</div></div>
+            <div class="time-box"><span id="hours">00</span><div class="label">Hours</div></div>
+            <div class="time-box"><span id="minutes">00</span><div class="label">Minutes</div></div>
+            <div class="time-box"><span id="seconds">00</span><div class="label">Seconds</div></div>
+        </div>
+        
+        <!-- Romantic Quote Box -->
+        <div class="quote-box">
+            <div class="quote-text" id="quote-text">"I look at you and see the rest of my life in front of my eyes."</div>
+            <div class="quote-author" id="quote-author">— Unknown</div>
+        </div>
+    </div>
+
+    <!-- PHASE 2: CELEBRATION -->
+    <div id="celebration-phase">
+        <canvas id="fireflies-canvas"></canvas>
+        <div class="message-box" id="dynamic-message"></div>
+        <a href="https://shuaibisc-wq.github.io/Mega-Project-/" class="gateway-btn" id="mega-project-btn">Step Into Your Universe ➔</a>
+    </div>
+
+    <script>
+        // ---------------- REAL-TIME CLOCK ----------------
+        function updateRealTimeClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            
+            document.getElementById('clock-display').innerText = `${hours}:${minutes}:${seconds} ${ampm}`;
+        }
+        setInterval(updateRealTimeClock, 1000);
+        updateRealTimeClock();
+
+        // ---------------- START SYSTEM ----------------
+        function startSystem() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('countdown-phase').style.display = 'flex';
+            
+            setTimeout(() => {
+                document.getElementById('countdown-phase').style.opacity = '1';
+                document.getElementById('quote-text').classList.add('show-quote');
+                document.getElementById('quote-author').classList.add('show-quote');
+            }, 100);
+            
+            document.getElementById('bg-music').play().catch(()=>{});
+            startQuoteCycler();
+        }
+
+        // Ambient Stars
+        const starCanvas = document.getElementById('ambient-stars');
+        const starCtx = starCanvas.getContext('2d');
+        starCanvas.width = window.innerWidth; starCanvas.height = window.innerHeight;
+        let stars = Array.from({length: 150}, () => ({
+            x: Math.random() * starCanvas.width, y: Math.random() * starCanvas.height,
+            r: Math.random() * 1.5, alpha: Math.random(), fade: Math.random() * 0.015
+        }));
+
+        function drawStars() {
+            starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+            stars.forEach(s => {
+                s.alpha += s.fade;
+                if(s.alpha >= 1 || s.alpha <= 0.1) s.fade *= -1;
+                starCtx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+                starCtx.beginPath(); starCtx.arc(s.x, s.y, s.r, 0, Math.PI*2); starCtx.fill();
+            });
+            requestAnimationFrame(drawStars);
+        }
+        drawStars();
+
+        // ---------------- ROMANTIC QUOTES LOGIC ----------------
+        const quotes = [
+            { text: "\"Whatever our souls are made of, hers and mine are the same.\"", author: "Emily Brontë" },
+            { text: "\"If I had a flower for every time I thought of you... I could walk through my garden forever.\"", author: "Alfred Tennyson" },
+            { text: "\"In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine.\"", author: "Maya Angelou" },
+            { text: "\"I have waited for this opportunity to repeat to you once again my vow of eternal fidelity.\"", author: "Gabriel García Márquez" },
+            { text: "\"You are the finest, loveliest, tenderest, and most beautiful person I have ever known.\"", author: "F. Scott Fitzgerald" },
+            { text: "\"Yours is the light by which my spirit's born: you are my sun, my moon, and all my stars.\"", author: "E.E. Cummings" },
+            { text: "\"I swear I couldn't love you more than I do right now, and yet I know I will tomorrow.\"", author: "Leo Christopher" }
+        ];
+        
+        let currentQuoteIndex = 0;
+        
+        function startQuoteCycler() {
+            setInterval(() => {
+                const qText = document.getElementById('quote-text');
+                const qAuthor = document.getElementById('quote-author');
+                
+                // Fade out
+                qText.classList.remove('show-quote');
+                qAuthor.classList.remove('show-quote');
+                
+                setTimeout(() => {
+                    // Change text and fade in
+                    currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+                    qText.innerText = quotes[currentQuoteIndex].text;
+                    qAuthor.innerText = "— " + quotes[currentQuoteIndex].author;
+                    
+                    qText.classList.add('show-quote');
+                    qAuthor.classList.add('show-quote');
+                }, 1500); 
+            }, 12000); // Changes every 12 seconds
+        }
+
+        // ---------------- COUNTDOWN LOGIC ----------------
+        const targetDate = new Date("June 9, 2026 00:00:00").getTime();
+        let timerInterval;
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance <= 0) {
+                clearInterval(timerInterval);
+                triggerMidnightMagic();
+                return;
+            }
+
+            document.getElementById("days").innerText = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            document.getElementById("hours").innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+        }
+        timerInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // ---------------- PHASE 2: MIDNIGHT MAGIC ----------------
+        function triggerMidnightMagic() {
+            document.getElementById('countdown-phase').style.opacity = '0';
+            
+            setTimeout(() => {
+                document.getElementById('countdown-phase').style.display = 'none';
+                const celebrationPhase = document.getElementById('celebration-phase');
+                celebrationPhase.style.display = 'flex';
+                
+                setTimeout(() => {
+                    celebrationPhase.style.opacity = '1';
+                    startMagicalFireflies();
+                    startMessageSequence();
+                }, 100);
+            }, 2000);
+        }
+
+        // Sweet Celebration Messages
+        const sequenceMessages = [
+            "HAPPY BIRTHDAY PROVA! 🎉",
+            "The moment we've been waiting for...",
+            "Even though I couldn't be there at this exact second...",
+            "I wanted to make sure the stars still aligned for you.",
+            "Every quote you read, every second that ticked by...",
+            "Was just my way of keeping you company.",
+            "Thank you for being the most amazing best friend.",
+            "Thank you for your aesthetic soul and beautiful smile.",
+            "I hope this birthday brings you endless joy.",
+            "Are you ready for the real magic?",
+            "Your digital universe awaits..."
+        ];
+
+        let msgIndex = 0;
+        const msgElement = document.getElementById('dynamic-message');
+
+        function startMessageSequence() {
+            function showNextMessage() {
+                if (msgIndex < sequenceMessages.length) {
+                    msgElement.innerText = sequenceMessages[msgIndex];
+                    msgElement.classList.add('show');
+                    
+                    setTimeout(() => {
+                        msgElement.classList.remove('show');
+                        msgIndex++;
+                        if (msgIndex < sequenceMessages.length) {
+                            setTimeout(showNextMessage, 1500); 
+                        } else {
+                            setTimeout(revealButton, 2000);
+                        }
+                    }, 8000); 
+                }
+            }
+            showNextMessage();
+        }
+
+        function revealButton() {
+            const btn = document.getElementById('mega-project-btn');
+            btn.classList.add('reveal');
+        }
+
+        // ---------------- MAGICAL FIREFLIES (Replaced Fireworks) ----------------
+        function startMagicalFireflies() {
+            const canvas = document.getElementById('fireflies-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+            let fireflies = [];
+            const colors = ['#e8d0c3', '#ffd700', '#ffffff', '#ffb6c1'];
+
+            class Firefly {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = canvas.height + Math.random() * 100; // Start from bottom
+                    this.radius = Math.random() * 3 + 1;
+                    this.speedY = Math.random() * 1.5 + 0.5;
+                    this.speedX = (Math.random() - 0.5) * 1;
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.alpha = 0; // Fade in
+                }
+                update() {
+                    this.y -= this.speedY;
+                    this.x += Math.sin(this.angle) * this.speedX;
+                    this.angle += 0.05;
+                    
+                    if (this.alpha < 1 && this.y > canvas.height * 0.2) this.alpha += 0.02;
+                    if (this.y < canvas.height * 0.2) this.alpha -= 0.01; // Fade out at top
+
+                    if (this.alpha <= 0 && this.y < canvas.height * 0.5) {
+                        this.y = canvas.height + 10;
+                        this.x = Math.random() * canvas.width;
+                        this.alpha = 0;
+                    }
+                }
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = this.color;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < 80; i++) fireflies.push(new Firefly());
+
+            function animate() {
+                requestAnimationFrame(animate);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                fireflies.forEach(f => { f.update(); f.draw(); });
+            }
+            animate();
+            
+            // Handle Resize
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+    </script>
+</body>
+</html>
