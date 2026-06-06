@@ -3,46 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIVE: Waiting for the Magic</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>LIVE: The 18th Solstice</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         body, html {
             width: 100%; height: 100%;
-            /* Soft romantic dark starry chocolate background */
             background: radial-gradient(circle at top right, #2a1625 0%, #0d1128 50%, #020108 100%);
             color: #ffffff; overflow: hidden;
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* ---------------- ALL TIME VISIBLE BADGES ---------------- */
+        /* ---------------- HIGHLY VISIBLE BADGES ---------------- */
         .top-badges {
             position: fixed; top: 0; left: 0; width: 100%; 
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 25px; z-index: 100; pointer-events: none;
+            padding: 25px 35px; z-index: 100; pointer-events: none;
+            background: linear-gradient(to bottom, rgba(2,1,8,0.8) 0%, transparent 100%);
         }
 
         .live-indicator {
-            font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 600;
-            color: #ff4d4d; display: flex; align-items: center; gap: 8px;
-            text-shadow: 0 0 10px rgba(255, 77, 77, 0.6); letter-spacing: 2px;
+            font-family: 'Montserrat', sans-serif; 
+            font-size: clamp(1.2rem, 4.5vw, 1.8rem); font-weight: 700;
+            color: #ff4d4d; display: flex; align-items: center; gap: 12px;
+            text-shadow: 0 0 15px rgba(255, 77, 77, 0.8); letter-spacing: 3px;
         }
 
         .red-dot {
-            width: 12px; height: 12px; background: #ff4d4d;
-            border-radius: 50%; box-shadow: 0 0 12px #ff4d4d;
+            width: 16px; height: 16px; background: #ff4d4d;
+            border-radius: 50%; box-shadow: 0 0 15px #ff4d4d;
             animation: blink 1s infinite;
         }
 
+        /* ---------------- HIGHLY UPGRADED REAL-TIME CLOCK ---------------- */
         .realtime-clock {
-            font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 500;
-            color: #e8d0c3; letter-spacing: 2px; text-shadow: 0 0 10px rgba(232, 208, 195, 0.5);
+            position: relative;
+            font-family: 'Cinzel', serif; /* Royal touch */
+            font-size: clamp(1rem, 3.5vw, 1.4rem); 
+            font-weight: 700;
+            color: #fffdf0;
+            background: linear-gradient(135deg, rgba(232, 208, 195, 0.15), rgba(0, 0, 0, 0.4));
+            padding: 12px 28px;
+            border-radius: 50px;
+            border: 1px solid rgba(232, 208, 195, 0.5);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(232, 208, 195, 0.1);
+            display: flex; align-items: center; gap: 4px;
+            overflow: hidden; pointer-events: auto; cursor: default;
         }
 
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        /* Sweeping light glare animation */
+        .realtime-clock::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transform: skewX(-25deg);
+            animation: glass-shine 4s infinite;
+        }
+
+        @keyframes glass-shine {
+            0% { left: -150%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        .time-segment {
+            display: inline-block; min-width: 2ch; text-align: center;
+            text-shadow: 0 0 15px rgba(232, 208, 195, 0.8);
+        }
+
+        .time-colon {
+            color: #e8d0c3; animation: blink 1s infinite;
+            text-shadow: 0 0 10px #e8d0c3;
+        }
+
+        .time-ampm {
+            font-family: 'Montserrat', sans-serif; font-size: 0.75em;
+            margin-left: 6px; color: #a49188; letter-spacing: 1px; font-weight: 600;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
         /* ---------------- START SCREEN ---------------- */
         #start-screen {
@@ -52,9 +97,9 @@
         }
         .init-btn {
             background: transparent; border: 1px solid #e8d0c3; color: #e8d0c3;
-            padding: 15px 40px; font-family: 'Cinzel', serif;
-            font-size: 1.2rem; letter-spacing: 3px; cursor: pointer;
-            transition: 0.3s; border-radius: 30px; box-shadow: 0 0 15px rgba(232, 208, 195, 0.2);
+            padding: 18px 45px; font-family: 'Cinzel', serif;
+            font-size: 1.3rem; letter-spacing: 3px; cursor: pointer;
+            transition: 0.3s; border-radius: 50px; box-shadow: 0 0 15px rgba(232, 208, 195, 0.2);
         }
         .init-btn:hover { background: rgba(232, 208, 195, 0.1); box-shadow: 0 0 30px rgba(232, 208, 195, 0.5); }
 
@@ -62,176 +107,248 @@
         #countdown-phase {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 10; transition: opacity 2s ease-in-out; display: none; padding: 20px;
+            z-index: 10; transition: opacity 1.5s ease-in-out; display: none; padding: 20px;
+            overflow-y: auto;
         }
         
         .title-text {
-            font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 5vw, 2.5rem);
-            color: #e8d0c3; letter-spacing: 5px; margin-bottom: 30px; 
+            font-family: 'Cinzel', serif; font-size: clamp(1.6rem, 5.5vw, 2.8rem);
+            color: #e8d0c3; letter-spacing: 5px; margin-bottom: 25px; margin-top: 80px;
             text-align: center; text-shadow: 0 0 15px rgba(232, 208, 195, 0.4);
         }
 
+        /* PREMIUM LUXURY TIMER */
         .timer-container { 
             display: flex; flex-wrap: wrap; justify-content: center; 
-            gap: clamp(10px, 3vw, 25px); margin-bottom: 40px; 
+            gap: clamp(15px, 4vw, 30px); margin-bottom: 40px; 
         }
 
         .time-box {
-            background: rgba(42, 22, 37, 0.3);
-            border: 1px solid rgba(232, 208, 195, 0.2);
-            padding: clamp(15px, 3vw, 25px); border-radius: 12px; 
-            backdrop-filter: blur(8px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            min-width: clamp(70px, 20vw, 120px); text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+            border-top: 1px solid rgba(232, 208, 195, 0.5);
+            border-left: 1px solid rgba(232, 208, 195, 0.5);
+            border-right: 1px solid rgba(232, 208, 195, 0.1);
+            border-bottom: 1px solid rgba(232, 208, 195, 0.1);
+            padding: clamp(20px, 4vw, 30px); border-radius: 20px; 
+            backdrop-filter: blur(15px); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(232, 208, 195, 0.05);
+            min-width: clamp(85px, 22vw, 140px); text-align: center;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+        }
+
+        .time-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.7), inset 0 0 30px rgba(232, 208, 195, 0.15);
         }
 
         .time-box span {
             display: block; font-family: 'Playfair Display', serif;
-            font-size: clamp(2.2rem, 8vw, 4rem); font-weight: 600; color: #fffdf0;
+            font-size: clamp(2.8rem, 9vw, 5rem); font-weight: 700; 
+            background: linear-gradient(to bottom, #ffffff 30%, #e8d0c3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 0px 8px rgba(232, 208, 195, 0.5));
         }
 
         .time-box .label {
-            font-family: 'Montserrat', sans-serif; font-size: clamp(0.7rem, 2vw, 0.9rem);
-            letter-spacing: 2px; color: #a49188; margin-top: 5px; text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif; font-size: clamp(0.8rem, 2.5vw, 1rem);
+            letter-spacing: 3px; color: #e8d0c3; margin-top: 10px; text-transform: uppercase;
+            font-weight: 600; opacity: 0.9;
         }
 
-        /* Romantic Quote Box (Anti-Boredom) */
+        /* Romantic Quote Box */
         .quote-box {
-            width: 100%; max-width: 650px; min-height: 120px;
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(232, 208, 195, 0.15);
-            padding: 25px; border-radius: 15px; text-align: center;
+            width: 100%; max-width: 650px; min-height: 100px;
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(232, 208, 195, 0.12);
+            padding: 20px; border-radius: 15px; text-align: center;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            backdrop-filter: blur(10px); box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px); margin-bottom: 30px;
         }
         
         .quote-text {
-            font-family: 'Playfair Display', serif; font-size: clamp(1rem, 3vw, 1.3rem);
+            font-family: 'Playfair Display', serif; font-size: clamp(1rem, 3.2vw, 1.3rem);
             font-style: italic; color: #e8d0c3; line-height: 1.6;
             opacity: 0; transition: opacity 1.5s ease-in-out;
         }
         .quote-author {
-            font-family: 'Montserrat', sans-serif; font-size: 0.85rem; 
-            color: #a49188; margin-top: 15px; letter-spacing: 2px;
+            font-family: 'Montserrat', sans-serif; font-size: 0.8rem; 
+            color: #a49188; margin-top: 10px; letter-spacing: 2px;
             opacity: 0; transition: opacity 1.5s ease-in-out; text-transform: uppercase;
         }
         .show-quote { opacity: 1 !important; }
+
+        /* Formspree Custom UI */
+        .msg-shuaib-container {
+            width: 100%; max-width: 480px;
+            display: flex; flex-direction: column; gap: 12px; z-index: 15; margin-bottom: 40px;
+        }
+        
+        .romantic-input {
+            width: 100%; padding: 16px 22px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(232, 208, 195, 0.25);
+            border-radius: 15px; color: #ffffff;
+            font-family: 'Montserrat', sans-serif; font-size: 0.95rem;
+            outline: none; transition: 0.3s;
+        }
+        
+        .romantic-input::placeholder { color: rgba(232, 208, 195, 0.6); }
+
+        .romantic-input:focus {
+            border-color: #e8d0c3; background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 15px rgba(232, 208, 195, 0.2);
+        }
+
+        .send-msg-btn {
+            background: transparent; border: 1px solid #e8d0c3; color: #e8d0c3;
+            padding: 14px 30px; font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem; font-weight: 600; letter-spacing: 2px;
+            border-radius: 30px; cursor: pointer; transition: 0.3s; text-transform: uppercase;
+        }
+
+        .send-msg-btn:hover {
+            background: #e8d0c3; color: #020108;
+            box-shadow: 0 0 20px rgba(232, 208, 195, 0.4);
+        }
 
         /* ---------------- PHASE 2: CELEBRATION ---------------- */
         #celebration-phase {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: none; flex-direction: column; justify-content: center; align-items: center;
             z-index: 20; background: radial-gradient(circle at center, #1b0a15 0%, #000000 100%);
-            opacity: 0; transition: opacity 3s ease-in-out; text-align: center;
+            opacity: 0; transition: opacity 2s ease-in-out; text-align: center;
         }
 
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 21; pointer-events: none; }
 
         .message-box {
             z-index: 30; font-family: 'Playfair Display', serif;
-            font-size: clamp(1.5rem, 5vw, 3rem); font-style: italic; color: #e8d0c3;
-            text-shadow: 0 0 20px rgba(232, 208, 195, 0.4);
+            font-size: clamp(1.6rem, 5.5vw, 3.2rem); font-style: italic; color: #e8d0c3;
+            text-shadow: 0 0 25px rgba(232, 208, 195, 0.5);
             padding: 20px; opacity: 0; transform: scale(0.95);
-            transition: all 2s ease-in-out; max-width: 90%; line-height: 1.5;
+            transition: all 1s ease-in-out; max-width: 90%; line-height: 1.5;
         }
         .message-box.show { opacity: 1; transform: scale(1); }
 
         .gateway-btn {
             position: absolute; bottom: 15%; z-index: 40; background: transparent;
-            border: 1px solid #e8d0c3; color: #e8d0c3; padding: 15px 35px;
-            font-size: clamp(0.9rem, 3vw, 1.1rem); font-family: 'Montserrat', sans-serif;
+            border: 2px solid #e8d0c3; color: #e8d0c3; padding: 16px 40px;
+            font-size: clamp(0.95rem, 3.2vw, 1.2rem); font-family: 'Montserrat', sans-serif;
             text-transform: uppercase; letter-spacing: 4px; border-radius: 50px;
-            cursor: pointer; opacity: 0; pointer-events: none; transition: all 1.5s ease;
+            cursor: pointer; opacity: 0; pointer-events: none; transition: all 1.2s ease;
             text-decoration: none; box-shadow: 0 0 15px rgba(232, 208, 195, 0.2);
         }
         .gateway-btn.reveal { opacity: 1; pointer-events: auto; }
-        .gateway-btn:hover { background: rgba(232, 208, 195, 0.15); box-shadow: 0 0 30px rgba(232, 208, 195, 0.6); color: #ffffff; }
+        .gateway-btn:hover { background: rgba(232, 208, 195, 0.15); box-shadow: 0 0 35px rgba(232, 208, 195, 0.7); color: #ffffff; }
 
         #ambient-stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <!-- Beautiful Soft Piano Music -->
     <audio id="bg-music" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+        <source src="music.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Always Visible Badges -->
     <div class="top-badges">
         <div class="live-indicator"><div class="red-dot"></div> LIVE</div>
-        <div class="realtime-clock" id="clock-display">00:00:00</div>
+        
+        <!-- UPGRADED ROYAL REALTIME CLOCK -->
+        <div class="realtime-clock" id="clock-display">
+            <!-- Injecting dynamically via JS -->
+        </div>
     </div>
 
-    <!-- START SCREEN -->
     <div id="start-screen">
         <button class="init-btn" onclick="startSystem()">Enter the Universe</button>
-        <p style="margin-top: 25px; font-family: 'Montserrat'; font-size: 0.8rem; color: #888; letter-spacing: 1px;">Turn on your device volume</p>
+        <p style="margin-top: 25px; font-family: 'Montserrat'; font-size: 0.85rem; color: #888; letter-spacing: 1px;">Turn on your device volume</p>
     </div>
 
     <canvas id="ambient-stars"></canvas>
 
-    <!-- PHASE 1: COUNTDOWN -->
     <div id="countdown-phase">
-        <div class="title-text">Waiting for Midnight</div>
+        <div class="title-text">Waiting for the 18th Solstice</div>
+        
         <div class="timer-container">
             <div class="time-box"><span id="days">00</span><div class="label">Days</div></div>
             <div class="time-box"><span id="hours">00</span><div class="label">Hours</div></div>
             <div class="time-box"><span id="minutes">00</span><div class="label">Minutes</div></div>
-            <div class="time-box"><span id="seconds">00</span><div class="label">Seconds</div></div>
+            <div class="time-box"><span id="seconds">00</span><div class="label">Secs</div></div>
         </div>
         
-        <!-- Romantic Quote Box -->
         <div class="quote-box">
-            <div class="quote-text" id="quote-text">"I look at you and see the rest of my life in front of my eyes."</div>
-            <div class="quote-author" id="quote-author">— Unknown</div>
+            <div class="quote-text" id="quote-text"></div>
+            <div class="quote-author" id="quote-author"></div>
         </div>
+
+        <form class="msg-shuaib-container" action="https://formspree.io/f/xlgkgoka" method="POST" target="_blank">
+            <textarea name="message" class="romantic-input" id="dynamic-placeholder" rows="3" required style="resize: none;"></textarea>
+            
+            <!-- CHANGED BUTTON TEXT TO 'Message Shuaib' -->
+            <button type="submit" class="send-msg-btn">Message Shuaib</button>
+        </form>
     </div>
 
-    <!-- PHASE 2: CELEBRATION -->
     <div id="celebration-phase">
         <canvas id="fireflies-canvas"></canvas>
         <div class="message-box" id="dynamic-message"></div>
-        <a href="https://shuaibisc-wq.github.io/Mega-Project-/" class="gateway-btn" id="mega-project-btn">Step Into Your Universe ➔</a>
+        <a href="https://shuaibisc-wq.github.io/Mega-Project-/" class="gateway-btn" id="mega-project-btn">Step Into Our Universe ➔</a>
     </div>
 
     <script>
-        // ---------------- REAL-TIME CLOCK ----------------
+        // UPGRADED Real-Time Clock Function
         function updateRealTimeClock() {
             const now = new Date();
             let hours = now.getHours();
             let minutes = now.getMinutes();
             let seconds = now.getSeconds();
             const ampm = hours >= 12 ? 'PM' : 'AM';
-            
+
             hours = hours % 12;
             hours = hours ? hours : 12; 
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            seconds = seconds < 10 ? '0' + seconds : seconds;
             
-            document.getElementById('clock-display').innerText = `${hours}:${minutes}:${seconds} ${ampm}`;
+            hours = String(hours).padStart(2, '0');
+            minutes = String(minutes).padStart(2, '0');
+            seconds = String(seconds).padStart(2, '0');
+
+            document.getElementById('clock-display').innerHTML = `
+                <span class="time-segment">${hours}</span>
+                <span class="time-colon">:</span>
+                <span class="time-segment">${minutes}</span>
+                <span class="time-colon">:</span>
+                <span class="time-segment">${seconds}</span>
+                <span class="time-ampm">${ampm}</span>
+            `;
         }
         setInterval(updateRealTimeClock, 1000);
         updateRealTimeClock();
 
-        // ---------------- START SYSTEM ----------------
+        const placeholders = [
+            "Leave a midnight thought for Shuaib...",
+            "Whisper something to the stars...",
+            "What's on your mind, my Queen?",
+            "Send a secret message to me...",
+            "Waiting for your text..."
+        ];
+        document.getElementById('dynamic-placeholder').placeholder = placeholders[Math.floor(Math.random() * placeholders.length)];
+
         function startSystem() {
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('countdown-phase').style.display = 'flex';
-            
+
             setTimeout(() => {
                 document.getElementById('countdown-phase').style.opacity = '1';
-                document.getElementById('quote-text').classList.add('show-quote');
-                document.getElementById('quote-author').classList.add('show-quote');
             }, 100);
-            
+
             document.getElementById('bg-music').play().catch(()=>{});
             startQuoteCycler();
         }
 
-        // Ambient Stars
         const starCanvas = document.getElementById('ambient-stars');
         const starCtx = starCanvas.getContext('2d');
         starCanvas.width = window.innerWidth; starCanvas.height = window.innerHeight;
-        let stars = Array.from({length: 150}, () => ({
+        let stars = Array.from({length: 120}, () => ({
             x: Math.random() * starCanvas.width, y: Math.random() * starCanvas.height,
             r: Math.random() * 1.5, alpha: Math.random(), fade: Math.random() * 0.015
         }));
@@ -248,41 +365,42 @@
         }
         drawStars();
 
-        // ---------------- ROMANTIC QUOTES LOGIC ----------------
-        const quotes = [
+        let quotes = [
             { text: "\"Whatever our souls are made of, hers and mine are the same.\"", author: "Emily Brontë" },
             { text: "\"If I had a flower for every time I thought of you... I could walk through my garden forever.\"", author: "Alfred Tennyson" },
             { text: "\"In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine.\"", author: "Maya Angelou" },
-            { text: "\"I have waited for this opportunity to repeat to you once again my vow of eternal fidelity.\"", author: "Gabriel García Márquez" },
             { text: "\"You are the finest, loveliest, tenderest, and most beautiful person I have ever known.\"", author: "F. Scott Fitzgerald" },
             { text: "\"Yours is the light by which my spirit's born: you are my sun, my moon, and all my stars.\"", author: "E.E. Cummings" },
             { text: "\"I swear I couldn't love you more than I do right now, and yet I know I will tomorrow.\"", author: "Leo Christopher" }
         ];
-        
+
+        quotes = quotes.sort(() => Math.random() - 0.5);
         let currentQuoteIndex = 0;
-        
+
         function startQuoteCycler() {
+            const qText = document.getElementById('quote-text');
+            const qAuthor = document.getElementById('quote-author');
+
+            qText.innerText = quotes[currentQuoteIndex].text;
+            qAuthor.innerText = "— " + quotes[currentQuoteIndex].author;
+            qText.classList.add('show-quote');
+            qAuthor.classList.add('show-quote');
+
             setInterval(() => {
-                const qText = document.getElementById('quote-text');
-                const qAuthor = document.getElementById('quote-author');
-                
-                // Fade out
                 qText.classList.remove('show-quote');
                 qAuthor.classList.remove('show-quote');
-                
+
                 setTimeout(() => {
-                    // Change text and fade in
                     currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
                     qText.innerText = quotes[currentQuoteIndex].text;
                     qAuthor.innerText = "— " + quotes[currentQuoteIndex].author;
-                    
+
                     qText.classList.add('show-quote');
                     qAuthor.classList.add('show-quote');
                 }, 1500); 
-            }, 12000); // Changes every 12 seconds
+            }, 10000); 
         }
 
-        // ---------------- COUNTDOWN LOGIC ----------------
         const targetDate = new Date("June 9, 2026 00:00:00").getTime();
         let timerInterval;
 
@@ -304,36 +422,33 @@
         timerInterval = setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // ---------------- PHASE 2: MIDNIGHT MAGIC ----------------
         function triggerMidnightMagic() {
             document.getElementById('countdown-phase').style.opacity = '0';
-            
+
             setTimeout(() => {
                 document.getElementById('countdown-phase').style.display = 'none';
                 const celebrationPhase = document.getElementById('celebration-phase');
                 celebrationPhase.style.display = 'flex';
-                
+
                 setTimeout(() => {
                     celebrationPhase.style.opacity = '1';
                     startMagicalFireflies();
                     startMessageSequence();
                 }, 100);
-            }, 2000);
+            }, 1500);
         }
 
-        // Sweet Celebration Messages
         const sequenceMessages = [
-            "HAPPY BIRTHDAY PROVA! 🎉",
-            "The moment we've been waiting for...",
-            "Even though I couldn't be there at this exact second...",
-            "I wanted to make sure the stars still aligned for you.",
-            "Every quote you read, every second that ticked by...",
-            "Was just my way of keeping you company.",
-            "Thank you for being the most amazing best friend.",
-            "Thank you for your aesthetic soul and beautiful smile.",
-            "I hope this birthday brings you endless joy.",
-            "Are you ready for the real magic?",
-            "Your digital universe awaits..."
+            "HAPPY 18TH BIRTHDAY, MY QUEEN! 🎉",
+            "The countdown has finally hit zero...",
+            "And a beautiful new chapter begins for us.",
+            "Even though my exams kept me away at this exact second...",
+            "My whole heart is right here, celebrating you.",
+            "Thank you for stepping into my life,",
+            "And for being the most amazing girlfriend in the universe. 💖",
+            "Every glowing firefly tonight is whispering how special you are.",
+            "Are you ready for your true birthday gift?",
+            "Your digital universe is officially open..."
         ];
 
         let msgIndex = 0;
@@ -344,16 +459,16 @@
                 if (msgIndex < sequenceMessages.length) {
                     msgElement.innerText = sequenceMessages[msgIndex];
                     msgElement.classList.add('show');
-                    
+
                     setTimeout(() => {
                         msgElement.classList.remove('show');
                         msgIndex++;
                         if (msgIndex < sequenceMessages.length) {
-                            setTimeout(showNextMessage, 1500); 
+                            setTimeout(showNextMessage, 1000); 
                         } else {
-                            setTimeout(revealButton, 2000);
+                            setTimeout(revealButton, 1000);
                         }
-                    }, 8000); 
+                    }, 4000); 
                 }
             }
             showNextMessage();
@@ -364,7 +479,6 @@
             btn.classList.add('reveal');
         }
 
-        // ---------------- MAGICAL FIREFLIES (Replaced Fireworks) ----------------
         function startMagicalFireflies() {
             const canvas = document.getElementById('fireflies-canvas');
             const ctx = canvas.getContext('2d');
@@ -376,21 +490,21 @@
             class Firefly {
                 constructor() {
                     this.x = Math.random() * canvas.width;
-                    this.y = canvas.height + Math.random() * 100; // Start from bottom
+                    this.y = canvas.height + Math.random() * 100;
                     this.radius = Math.random() * 3 + 1;
                     this.speedY = Math.random() * 1.5 + 0.5;
                     this.speedX = (Math.random() - 0.5) * 1;
                     this.color = colors[Math.floor(Math.random() * colors.length)];
                     this.angle = Math.random() * Math.PI * 2;
-                    this.alpha = 0; // Fade in
+                    this.alpha = 0;
                 }
                 update() {
                     this.y -= this.speedY;
                     this.x += Math.sin(this.angle) * this.speedX;
                     this.angle += 0.05;
-                    
+
                     if (this.alpha < 1 && this.y > canvas.height * 0.2) this.alpha += 0.02;
-                    if (this.y < canvas.height * 0.2) this.alpha -= 0.01; // Fade out at top
+                    if (this.y < canvas.height * 0.2) this.alpha -= 0.01;
 
                     if (this.alpha <= 0 && this.y < canvas.height * 0.5) {
                         this.y = canvas.height + 10;
@@ -419,11 +533,9 @@
                 fireflies.forEach(f => { f.update(); f.draw(); });
             }
             animate();
-            
-            // Handle Resize
+
             window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+                canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             });
         }
     </script>
