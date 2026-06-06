@@ -307,7 +307,6 @@
         <a href="https://shuaibisc-wq.github.io/Mega-Project-/" class="gateway-btn" id="mega-project-btn">Step Into Our Universe ➔</a>
     </div>
 
-    <!-- SHUAIB'S SIGNATURE FOOTER -->
     <div class="credit-footer">Designed by Shuaib</div>
 
     <script>
@@ -331,6 +330,16 @@
 
         const placeholders = ["Leave a message...", "Whisper something to the stars...", "What's on your mind ?"];
         document.getElementById('dynamic-placeholder').placeholder = placeholders[Math.floor(Math.random() * placeholders.length)];
+
+        // মেসেজ সেন্ড করার পর টেক্সট এরিয়া ক্লিয়ার করার কোড
+        const msgForm = document.querySelector('.msg-shuaib-container');
+        const msgInput = document.getElementById('dynamic-placeholder');
+
+        msgForm.addEventListener('submit', function() {
+            setTimeout(() => {
+                msgInput.value = '';
+            }, 10);
+        });
 
         // Time constraints
         const targetDate = new Date("June 9, 2026 00:00:00").getTime();
@@ -372,7 +381,7 @@
             const msgElement = document.getElementById('dynamic-message');
             msgElement.innerText = "The Solstice has passed, but our Universe remains open.";
             msgElement.classList.add('show');
-            
+
             document.getElementById('mega-project-btn').classList.add('reveal');
         }
 
@@ -429,7 +438,7 @@
 
         function updateCountdown() {
             const now = new Date().getTime();
-            
+
             if (now >= postCelebrationDate) {
                 clearInterval(timerInterval);
                 if(isSystemStarted) setupPostCelebration();
@@ -483,15 +492,15 @@
                 let particle = document.createElement('div');
                 particle.className = 'particle';
                 particle.style.backgroundColor = color;
-                
+
                 let size = Math.random() * 8 + 4;
                 particle.style.width = size + 'px';
                 particle.style.height = size + 'px';
                 particle.style.left = (x - size/2) + 'px';
                 particle.style.top = (y - size/2) + 'px';
-                
+
                 container.appendChild(particle);
-                
+
                 let angle = Math.random() * Math.PI * 2;
                 let velocity = Math.random() * 80 + 40;
                 let tx = Math.cos(angle) * velocity;
@@ -562,18 +571,18 @@
                 balloonContainer.addEventListener('mousedown', function(e) {
                     createPopEffect(e.clientX, e.clientY, color);
                     balloonContainer.remove();
-                    
+
                     // Respawn a new balloon instantly from the bottom
                     setTimeout(() => createBalloon('0s'), 800);
                 });
-                
+
                 // For mobile touch
                 balloonContainer.addEventListener('touchstart', function(e) {
                     e.preventDefault(); // Prevent double firing
                     let touch = e.touches[0];
                     createPopEffect(touch.clientX, touch.clientY, color);
                     balloonContainer.remove();
-                    
+
                     setTimeout(() => createBalloon('0s'), 800);
                 }, {passive: false});
 
