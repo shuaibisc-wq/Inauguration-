@@ -50,7 +50,7 @@
             animation: none;
         }
 
-        /* ---------------- HIGHLY UPGRADED REAL-TIME CLOCK ---------------- */
+        /* ---------------- REAL-TIME CLOCK ---------------- */
         .realtime-clock {
             position: relative;
             font-family: 'Cinzel', serif;
@@ -101,7 +101,7 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 10; transition: opacity 1.5s ease-in-out; display: none; padding: 20px;
-            overflow-y: auto; padding-bottom: 60px; /* Space for footer */
+            overflow-y: auto; padding-bottom: 60px;
         }
 
         .title-text {
@@ -195,12 +195,12 @@
             font-size: clamp(1.6rem, 5.5vw, 3.2rem); font-style: italic; color: #e8d0c3;
             text-shadow: 0 0 25px rgba(232, 208, 195, 0.5);
             padding: 20px; opacity: 0; transform: scale(0.95);
-            transition: all 1s ease-in-out; max-width: 90%; line-height: 1.5;
+            transition: all 1s ease-in-out; max-width: 90%; line-height: 1.5; pointer-events: none;
         }
         .message-box.show { opacity: 1; transform: scale(1); }
 
         .gateway-btn {
-            position: absolute; bottom: 20%; z-index: 40; background: transparent;
+            position: absolute; bottom: 15%; z-index: 40; background: transparent;
             border: 2px solid #e8d0c3; color: #e8d0c3; padding: 16px 40px;
             font-size: clamp(0.95rem, 3.2vw, 1.2rem); font-family: 'Montserrat', sans-serif;
             text-transform: uppercase; letter-spacing: 4px; border-radius: 50px;
@@ -216,6 +216,38 @@
             10% { opacity: 1; }
             50% { transform: translateY(-60vh) rotate(5deg); }
             100% { transform: translateY(-120vh) rotate(-5deg); opacity: 1; }
+        }
+
+        /* Pop Particles CSS */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 50;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+        }
+
+        /* Instruction Text for Balloons */
+        .pop-instruction {
+            position: absolute;
+            bottom: 25%;
+            z-index: 35;
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: gentle-pulse 2s infinite;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            pointer-events: none;
+        }
+        .pop-instruction.show { opacity: 1; }
+
+        @keyframes gentle-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.05); opacity: 1; }
         }
 
         #ambient-stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
@@ -271,6 +303,7 @@
     <div id="celebration-phase">
         <canvas id="fireflies-canvas"></canvas>
         <div class="message-box" id="dynamic-message"></div>
+        <div class="pop-instruction" id="pop-instruction">✨ Tap the balloons to pop them! ✨</div>
         <a href="https://shuaibisc-wq.github.io/Mega-Project-/" class="gateway-btn" id="mega-project-btn">Step Into Our Universe ➔</a>
     </div>
 
@@ -312,16 +345,11 @@
 
             const now = new Date().getTime();
 
-            // Check if user enters between 12:00 AM and 12:30 AM
             if (now >= targetDate && now < postCelebrationDate) {
-                triggerMidnightMagic(true); // Jump directly to celebration sequence
-            } 
-            // Check if user enters after 12:30 AM
-            else if (now >= postCelebrationDate) {
+                triggerMidnightMagic(true); 
+            } else if (now >= postCelebrationDate) {
                 setupPostCelebration();
-            } 
-            // Before 12:00 AM
-            else {
+            } else {
                 document.getElementById('countdown-phase').style.display = 'flex';
                 setTimeout(() => { document.getElementById('countdown-phase').style.opacity = '1'; }, 100);
                 startQuoteCycler();
@@ -329,7 +357,6 @@
         }
 
         function setupPostCelebration() {
-            // Update UI for closed live session
             const liveBadge = document.getElementById('live-status');
             liveBadge.innerHTML = `<div class="red-dot"></div> <span>CELEBRATION CLOSED</span>`;
             liveBadge.classList.add('closed');
@@ -342,7 +369,6 @@
             startMagicalFireflies();
             startBalloons();
 
-            // Show a static welcome message and the button directly
             const msgElement = document.getElementById('dynamic-message');
             msgElement.innerText = "The Solstice has passed, but our Universe remains open.";
             msgElement.classList.add('show');
@@ -376,8 +402,7 @@
             { text: "\"If I had a flower for every time I thought of you... I could walk through my garden forever.\"", author: "Alfred Tennyson" },
             { text: "\"In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine.\"", author: "Maya Angelou" },
             { text: "\"You are the finest, loveliest, tenderest, and most beautiful person I have ever known.\"", author: "F. Scott Fitzgerald" },
-            { text: "\"Yours is the light by which my spirit's born: you are my sun, my moon, and all my stars.\"", author: "E.E. Cummings" },
-            { text: "\"I swear I couldn't love you more than I do right now, and yet I know I will tomorrow.\"", author: "Leo Christopher" }
+            { text: "\"Yours is the light by which my spirit's born: you are my sun, my moon, and all my stars.\"", author: "E.E. Cummings" }
         ];
 
         quotes = quotes.sort(() => Math.random() - 0.5);
@@ -405,21 +430,18 @@
         function updateCountdown() {
             const now = new Date().getTime();
             
-            // Check if we hit the post-celebration time while on the site
             if (now >= postCelebrationDate) {
                 clearInterval(timerInterval);
                 if(isSystemStarted) setupPostCelebration();
                 return;
             }
 
-            // Check if we just hit zero (12:00 AM) while on the site
             if (now >= targetDate && now < postCelebrationDate) {
                 clearInterval(timerInterval);
                 if(isSystemStarted) triggerMidnightMagic(false);
                 return;
             }
 
-            // Normal Countdown Calculation
             const distance = targetDate - now;
             document.getElementById("days").innerText = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
             document.getElementById("hours").innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
@@ -436,7 +458,7 @@
                 celebrationPhase.style.display = 'flex';
                 celebrationPhase.style.opacity = '1';
                 startMagicalFireflies();
-                startBalloons(); // Added Party Balloons
+                startBalloons(); 
                 startMessageSequence();
             } else {
                 document.getElementById('countdown-phase').style.opacity = '0';
@@ -447,26 +469,59 @@
                     setTimeout(() => {
                         celebrationPhase.style.opacity = '1';
                         startMagicalFireflies();
-                        startBalloons(); // Added Party Balloons
+                        startBalloons(); 
                         startMessageSequence();
                     }, 100);
                 }, 1500);
             }
         }
 
-        // Party Balloons Logic
+        // Particle Pop Effect Logic
+        function createPopEffect(x, y, color) {
+            const container = document.getElementById('celebration-phase');
+            for (let i = 0; i < 10; i++) {
+                let particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.backgroundColor = color;
+                
+                let size = Math.random() * 8 + 4;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = (x - size/2) + 'px';
+                particle.style.top = (y - size/2) + 'px';
+                
+                container.appendChild(particle);
+                
+                let angle = Math.random() * Math.PI * 2;
+                let velocity = Math.random() * 80 + 40;
+                let tx = Math.cos(angle) * velocity;
+                let ty = Math.sin(angle) * velocity;
+
+                // Force reflow to ensure animation triggers
+                particle.getBoundingClientRect();
+
+                particle.style.transform = `translate(${tx}px, ${ty}px) scale(0)`;
+                particle.style.opacity = '0';
+
+                setTimeout(() => particle.remove(), 400);
+            }
+        }
+
+        // Party Balloons Logic (Interactive)
         function startBalloons() {
             const container = document.getElementById('celebration-phase');
             const colors = ['#ff4d4d', '#ffb6c1', '#e8d0c3', '#ffd700', '#ff9999', '#b388ff'];
+            const maxBalloons = 25;
 
-            for (let i = 0; i < 25; i++) {
+            function createBalloon(delayOverride = null) {
                 let balloonContainer = document.createElement('div');
                 balloonContainer.style.position = 'absolute';
                 balloonContainer.style.bottom = '-150px';
                 balloonContainer.style.left = Math.random() * 100 + 'vw';
-                balloonContainer.style.animation = `floatUp ${6 + Math.random() * 6}s ease-in-out infinite`;
-                balloonContainer.style.animationDelay = `${Math.random() * 5}s`;
+                balloonContainer.style.animation = `floatUp ${6 + Math.random() * 6}s linear infinite`;
+                balloonContainer.style.animationDelay = delayOverride !== null ? delayOverride : `${Math.random() * 5}s`;
                 balloonContainer.style.zIndex = '22';
+                balloonContainer.style.cursor = 'pointer'; 
 
                 let color = colors[Math.floor(Math.random() * colors.length)];
 
@@ -477,6 +532,18 @@
                 balloon.style.borderRadius = '50% 50% 50% 50% / 40% 40% 60% 60%';
                 balloon.style.boxShadow = 'inset -5px -5px 15px rgba(0,0,0,0.3)';
                 balloon.style.position = 'relative';
+
+                // Light highlight on balloon
+                let highlight = document.createElement('div');
+                highlight.style.position = 'absolute';
+                highlight.style.top = '10px';
+                highlight.style.left = '10px';
+                highlight.style.width = '12px';
+                highlight.style.height = '20px';
+                highlight.style.backgroundColor = 'rgba(255,255,255,0.4)';
+                highlight.style.borderRadius = '50%';
+                highlight.style.transform = 'rotate(-30deg)';
+                balloon.appendChild(highlight);
 
                 // Balloon String
                 let string = document.createElement('div');
@@ -490,7 +557,38 @@
                 balloonContainer.appendChild(balloon);
                 balloonContainer.appendChild(string);
                 container.appendChild(balloonContainer);
+
+                // Balloon Pop Event
+                balloonContainer.addEventListener('mousedown', function(e) {
+                    createPopEffect(e.clientX, e.clientY, color);
+                    balloonContainer.remove();
+                    
+                    // Respawn a new balloon instantly from the bottom
+                    setTimeout(() => createBalloon('0s'), 800);
+                });
+                
+                // For mobile touch
+                balloonContainer.addEventListener('touchstart', function(e) {
+                    e.preventDefault(); // Prevent double firing
+                    let touch = e.touches[0];
+                    createPopEffect(touch.clientX, touch.clientY, color);
+                    balloonContainer.remove();
+                    
+                    setTimeout(() => createBalloon('0s'), 800);
+                }, {passive: false});
+
+                return balloonContainer;
             }
+
+            for (let i = 0; i < maxBalloons; i++) {
+                createBalloon();
+            }
+
+            // Show Instruction Text after 3 seconds
+            setTimeout(() => {
+                const instruction = document.getElementById('pop-instruction');
+                if (instruction) instruction.classList.add('show');
+            }, 3000);
         }
 
         const sequenceMessages = [
