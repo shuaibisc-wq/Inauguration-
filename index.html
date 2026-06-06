@@ -27,9 +27,15 @@
 
         .live-indicator {
             font-family: 'Montserrat', sans-serif; 
-            font-size: clamp(1.2rem, 4.5vw, 1.8rem); font-weight: 700;
+            font-size: clamp(1rem, 4vw, 1.8rem); font-weight: 700;
             color: #ff4d4d; display: flex; align-items: center; gap: 12px;
             text-shadow: 0 0 15px rgba(255, 77, 77, 0.8); letter-spacing: 3px;
+            transition: all 0.5s ease;
+        }
+
+        .live-indicator.closed {
+            color: #888;
+            text-shadow: 0 0 10px rgba(136, 136, 136, 0.3);
         }
 
         .red-dot {
@@ -38,15 +44,21 @@
             animation: blink 1s infinite;
         }
 
+        .live-indicator.closed .red-dot {
+            background: #888;
+            box-shadow: none;
+            animation: none;
+        }
+
         /* ---------------- HIGHLY UPGRADED REAL-TIME CLOCK ---------------- */
         .realtime-clock {
             position: relative;
-            font-family: 'Cinzel', serif; /* Royal touch */
-            font-size: clamp(1rem, 3.5vw, 1.4rem); 
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.9rem, 3.5vw, 1.4rem); 
             font-weight: 700;
             color: #fffdf0;
             background: linear-gradient(135deg, rgba(232, 208, 195, 0.15), rgba(0, 0, 0, 0.4));
-            padding: 12px 28px;
+            padding: 10px 22px;
             border-radius: 50px;
             border: 1px solid rgba(232, 208, 195, 0.5);
             backdrop-filter: blur(15px);
@@ -55,37 +67,18 @@
             overflow: hidden; pointer-events: auto; cursor: default;
         }
 
-        /* Sweeping light glare animation */
         .realtime-clock::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -150%;
+            content: ''; position: absolute; top: 0; left: -150%;
             width: 50%; height: 100%;
             background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transform: skewX(-25deg);
-            animation: glass-shine 4s infinite;
+            transform: skewX(-25deg); animation: glass-shine 4s infinite;
         }
 
-        @keyframes glass-shine {
-            0% { left: -150%; }
-            20% { left: 200%; }
-            100% { left: 200%; }
-        }
+        @keyframes glass-shine { 0% { left: -150%; } 20% { left: 200%; } 100% { left: 200%; } }
 
-        .time-segment {
-            display: inline-block; min-width: 2ch; text-align: center;
-            text-shadow: 0 0 15px rgba(232, 208, 195, 0.8);
-        }
-
-        .time-colon {
-            color: #e8d0c3; animation: blink 1s infinite;
-            text-shadow: 0 0 10px #e8d0c3;
-        }
-
-        .time-ampm {
-            font-family: 'Montserrat', sans-serif; font-size: 0.75em;
-            margin-left: 6px; color: #a49188; letter-spacing: 1px; font-weight: 600;
-        }
+        .time-segment { display: inline-block; min-width: 2ch; text-align: center; text-shadow: 0 0 15px rgba(232, 208, 195, 0.8); }
+        .time-colon { color: #e8d0c3; animation: blink 1s infinite; text-shadow: 0 0 10px #e8d0c3; }
+        .time-ampm { font-family: 'Montserrat', sans-serif; font-size: 0.75em; margin-left: 6px; color: #a49188; letter-spacing: 1px; font-weight: 600; }
 
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
@@ -108,16 +101,15 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 10; transition: opacity 1.5s ease-in-out; display: none; padding: 20px;
-            overflow-y: auto;
+            overflow-y: auto; padding-bottom: 60px; /* Space for footer */
         }
-        
+
         .title-text {
             font-family: 'Cinzel', serif; font-size: clamp(1.6rem, 5.5vw, 2.8rem);
             color: #e8d0c3; letter-spacing: 5px; margin-bottom: 25px; margin-top: 80px;
             text-align: center; text-shadow: 0 0 15px rgba(232, 208, 195, 0.4);
         }
 
-        /* PREMIUM LUXURY TIMER */
         .timer-container { 
             display: flex; flex-wrap: wrap; justify-content: center; 
             gap: clamp(15px, 4vw, 30px); margin-bottom: 40px; 
@@ -126,15 +118,12 @@
         .time-box {
             position: relative;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
-            border-top: 1px solid rgba(232, 208, 195, 0.5);
-            border-left: 1px solid rgba(232, 208, 195, 0.5);
-            border-right: 1px solid rgba(232, 208, 195, 0.1);
-            border-bottom: 1px solid rgba(232, 208, 195, 0.1);
+            border: 1px solid rgba(232, 208, 195, 0.3);
             padding: clamp(20px, 4vw, 30px); border-radius: 20px; 
             backdrop-filter: blur(15px); 
             box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(232, 208, 195, 0.05);
             min-width: clamp(85px, 22vw, 140px); text-align: center;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
         .time-box:hover {
@@ -146,18 +135,15 @@
             display: block; font-family: 'Playfair Display', serif;
             font-size: clamp(2.8rem, 9vw, 5rem); font-weight: 700; 
             background: linear-gradient(to bottom, #ffffff 30%, #e8d0c3 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0px 0px 8px rgba(232, 208, 195, 0.5));
         }
 
         .time-box .label {
             font-family: 'Montserrat', sans-serif; font-size: clamp(0.8rem, 2.5vw, 1rem);
-            letter-spacing: 3px; color: #e8d0c3; margin-top: 10px; text-transform: uppercase;
-            font-weight: 600; opacity: 0.9;
+            letter-spacing: 3px; color: #e8d0c3; margin-top: 10px; text-transform: uppercase; font-weight: 600;
         }
 
-        /* Romantic Quote Box */
         .quote-box {
             width: 100%; max-width: 650px; min-height: 100px;
             background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(232, 208, 195, 0.12);
@@ -165,52 +151,33 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             backdrop-filter: blur(10px); margin-bottom: 30px;
         }
-        
+
         .quote-text {
             font-family: 'Playfair Display', serif; font-size: clamp(1rem, 3.2vw, 1.3rem);
-            font-style: italic; color: #e8d0c3; line-height: 1.6;
-            opacity: 0; transition: opacity 1.5s ease-in-out;
+            font-style: italic; color: #e8d0c3; line-height: 1.6; opacity: 0; transition: opacity 1.5s;
         }
         .quote-author {
             font-family: 'Montserrat', sans-serif; font-size: 0.8rem; 
             color: #a49188; margin-top: 10px; letter-spacing: 2px;
-            opacity: 0; transition: opacity 1.5s ease-in-out; text-transform: uppercase;
+            opacity: 0; transition: opacity 1.5s; text-transform: uppercase;
         }
         .show-quote { opacity: 1 !important; }
 
-        /* Formspree Custom UI */
-        .msg-shuaib-container {
-            width: 100%; max-width: 480px;
-            display: flex; flex-direction: column; gap: 12px; z-index: 15; margin-bottom: 40px;
-        }
-        
+        .msg-shuaib-container { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; z-index: 15; margin-bottom: 40px; }
+
         .romantic-input {
-            width: 100%; padding: 16px 22px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(232, 208, 195, 0.25);
-            border-radius: 15px; color: #ffffff;
-            font-family: 'Montserrat', sans-serif; font-size: 0.95rem;
-            outline: none; transition: 0.3s;
+            width: 100%; padding: 16px 22px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(232, 208, 195, 0.25); border-radius: 15px; color: #ffffff;
+            font-family: 'Montserrat', sans-serif; font-size: 0.95rem; outline: none; transition: 0.3s;
         }
-        
-        .romantic-input::placeholder { color: rgba(232, 208, 195, 0.6); }
-
-        .romantic-input:focus {
-            border-color: #e8d0c3; background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 15px rgba(232, 208, 195, 0.2);
-        }
-
+        .romantic-input:focus { border-color: #e8d0c3; background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 15px rgba(232, 208, 195, 0.2); }
         .send-msg-btn {
             background: transparent; border: 1px solid #e8d0c3; color: #e8d0c3;
             padding: 14px 30px; font-family: 'Montserrat', sans-serif;
             font-size: 0.9rem; font-weight: 600; letter-spacing: 2px;
             border-radius: 30px; cursor: pointer; transition: 0.3s; text-transform: uppercase;
         }
-
-        .send-msg-btn:hover {
-            background: #e8d0c3; color: #020108;
-            box-shadow: 0 0 20px rgba(232, 208, 195, 0.4);
-        }
+        .send-msg-btn:hover { background: #e8d0c3; color: #020108; box-shadow: 0 0 20px rgba(232, 208, 195, 0.4); }
 
         /* ---------------- PHASE 2: CELEBRATION ---------------- */
         #celebration-phase {
@@ -218,6 +185,7 @@
             display: none; flex-direction: column; justify-content: center; align-items: center;
             z-index: 20; background: radial-gradient(circle at center, #1b0a15 0%, #000000 100%);
             opacity: 0; transition: opacity 2s ease-in-out; text-align: center;
+            overflow: hidden;
         }
 
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 21; pointer-events: none; }
@@ -232,7 +200,7 @@
         .message-box.show { opacity: 1; transform: scale(1); }
 
         .gateway-btn {
-            position: absolute; bottom: 15%; z-index: 40; background: transparent;
+            position: absolute; bottom: 20%; z-index: 40; background: transparent;
             border: 2px solid #e8d0c3; color: #e8d0c3; padding: 16px 40px;
             font-size: clamp(0.95rem, 3.2vw, 1.2rem); font-family: 'Montserrat', sans-serif;
             text-transform: uppercase; letter-spacing: 4px; border-radius: 50px;
@@ -242,7 +210,23 @@
         .gateway-btn.reveal { opacity: 1; pointer-events: auto; }
         .gateway-btn:hover { background: rgba(232, 208, 195, 0.15); box-shadow: 0 0 35px rgba(232, 208, 195, 0.7); color: #ffffff; }
 
+        /* Animation Keyframes for Balloons */
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(-5deg); opacity: 0; }
+            10% { opacity: 1; }
+            50% { transform: translateY(-60vh) rotate(5deg); }
+            100% { transform: translateY(-120vh) rotate(-5deg); opacity: 1; }
+        }
+
         #ambient-stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+
+        /* FOOTER CREDIT */
+        .credit-footer {
+            position: fixed; bottom: 15px; left: 0; width: 100%;
+            text-align: center; font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem; color: rgba(232, 208, 195, 0.5);
+            letter-spacing: 2px; z-index: 1000; pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -252,12 +236,8 @@
     </audio>
 
     <div class="top-badges">
-        <div class="live-indicator"><div class="red-dot"></div> LIVE</div>
-        
-        <!-- UPGRADED ROYAL REALTIME CLOCK -->
-        <div class="realtime-clock" id="clock-display">
-            <!-- Injecting dynamically via JS -->
-        </div>
+        <div class="live-indicator" id="live-status"><div class="red-dot"></div> <span>LIVE</span></div>
+        <div class="realtime-clock" id="clock-display"></div>
     </div>
 
     <div id="start-screen">
@@ -269,14 +249,14 @@
 
     <div id="countdown-phase">
         <div class="title-text">Waiting for the 18th Solstice</div>
-        
+
         <div class="timer-container">
             <div class="time-box"><span id="days">00</span><div class="label">Days</div></div>
             <div class="time-box"><span id="hours">00</span><div class="label">Hours</div></div>
             <div class="time-box"><span id="minutes">00</span><div class="label">Minutes</div></div>
             <div class="time-box"><span id="seconds">00</span><div class="label">Secs</div></div>
         </div>
-        
+
         <div class="quote-box">
             <div class="quote-text" id="quote-text"></div>
             <div class="quote-author" id="quote-author"></div>
@@ -284,8 +264,6 @@
 
         <form class="msg-shuaib-container" action="https://formspree.io/f/xlgkgoka" method="POST" target="_blank">
             <textarea name="message" class="romantic-input" id="dynamic-placeholder" rows="3" required style="resize: none;"></textarea>
-            
-            <!-- CHANGED BUTTON TEXT TO 'Message Shuaib' -->
             <button type="submit" class="send-msg-btn">Message Shuaib</button>
         </form>
     </div>
@@ -296,54 +274,83 @@
         <a href="https://shuaibisc-wq.github.io/Mega-Project-/" class="gateway-btn" id="mega-project-btn">Step Into Our Universe ➔</a>
     </div>
 
+    <!-- SHUAIB'S SIGNATURE FOOTER -->
+    <div class="credit-footer">Crafted with ❤️ by Shuaib</div>
+
     <script>
-        // UPGRADED Real-Time Clock Function
+        // Real-Time Clock Function
         function updateRealTimeClock() {
             const now = new Date();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            let seconds = now.getSeconds();
+            let hours = now.getHours(), minutes = now.getMinutes(), seconds = now.getSeconds();
             const ampm = hours >= 12 ? 'PM' : 'AM';
-
-            hours = hours % 12;
-            hours = hours ? hours : 12; 
-            
-            hours = String(hours).padStart(2, '0');
-            minutes = String(minutes).padStart(2, '0');
-            seconds = String(seconds).padStart(2, '0');
-
+            hours = hours % 12; hours = hours ? hours : 12; 
             document.getElementById('clock-display').innerHTML = `
-                <span class="time-segment">${hours}</span>
+                <span class="time-segment">${String(hours).padStart(2, '0')}</span>
                 <span class="time-colon">:</span>
-                <span class="time-segment">${minutes}</span>
+                <span class="time-segment">${String(minutes).padStart(2, '0')}</span>
                 <span class="time-colon">:</span>
-                <span class="time-segment">${seconds}</span>
+                <span class="time-segment">${String(seconds).padStart(2, '0')}</span>
                 <span class="time-ampm">${ampm}</span>
             `;
         }
         setInterval(updateRealTimeClock, 1000);
         updateRealTimeClock();
 
-        const placeholders = [
-            "Leave a message...",
-            "Whisper something to the stars...",
-            "What's on your mind ?"
-            
-        ];
+        const placeholders = ["Leave a message...", "Whisper something to the stars...", "What's on your mind ?"];
         document.getElementById('dynamic-placeholder').placeholder = placeholders[Math.floor(Math.random() * placeholders.length)];
 
+        // Time constraints
+        const targetDate = new Date("June 9, 2026 00:00:00").getTime();
+        const postCelebrationDate = new Date("June 9, 2026 00:30:00").getTime();
+        let timerInterval;
+        let isSystemStarted = false;
+
         function startSystem() {
+            isSystemStarted = true;
             document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('countdown-phase').style.display = 'flex';
-
-            setTimeout(() => {
-                document.getElementById('countdown-phase').style.opacity = '1';
-            }, 100);
-
             document.getElementById('bg-music').play().catch(()=>{});
-            startQuoteCycler();
+
+            const now = new Date().getTime();
+
+            // Check if user enters between 12:00 AM and 12:30 AM
+            if (now >= targetDate && now < postCelebrationDate) {
+                triggerMidnightMagic(true); // Jump directly to celebration sequence
+            } 
+            // Check if user enters after 12:30 AM
+            else if (now >= postCelebrationDate) {
+                setupPostCelebration();
+            } 
+            // Before 12:00 AM
+            else {
+                document.getElementById('countdown-phase').style.display = 'flex';
+                setTimeout(() => { document.getElementById('countdown-phase').style.opacity = '1'; }, 100);
+                startQuoteCycler();
+            }
         }
 
+        function setupPostCelebration() {
+            // Update UI for closed live session
+            const liveBadge = document.getElementById('live-status');
+            liveBadge.innerHTML = `<div class="red-dot"></div> <span>CELEBRATION CLOSED</span>`;
+            liveBadge.classList.add('closed');
+
+            document.getElementById('countdown-phase').style.display = 'none';
+            const celebrationPhase = document.getElementById('celebration-phase');
+            celebrationPhase.style.display = 'flex';
+            celebrationPhase.style.opacity = '1';
+
+            startMagicalFireflies();
+            startBalloons();
+
+            // Show a static welcome message and the button directly
+            const msgElement = document.getElementById('dynamic-message');
+            msgElement.innerText = "The Solstice has passed, but our Universe remains open.";
+            msgElement.classList.add('show');
+            
+            document.getElementById('mega-project-btn').classList.add('reveal');
+        }
+
+        // Ambient Background Stars
         const starCanvas = document.getElementById('ambient-stars');
         const starCtx = starCanvas.getContext('2d');
         starCanvas.width = window.innerWidth; starCanvas.height = window.innerHeight;
@@ -382,37 +389,38 @@
 
             qText.innerText = quotes[currentQuoteIndex].text;
             qAuthor.innerText = "— " + quotes[currentQuoteIndex].author;
-            qText.classList.add('show-quote');
-            qAuthor.classList.add('show-quote');
+            qText.classList.add('show-quote'); qAuthor.classList.add('show-quote');
 
             setInterval(() => {
-                qText.classList.remove('show-quote');
-                qAuthor.classList.remove('show-quote');
-
+                qText.classList.remove('show-quote'); qAuthor.classList.remove('show-quote');
                 setTimeout(() => {
                     currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
                     qText.innerText = quotes[currentQuoteIndex].text;
                     qAuthor.innerText = "— " + quotes[currentQuoteIndex].author;
-
-                    qText.classList.add('show-quote');
-                    qAuthor.classList.add('show-quote');
+                    qText.classList.add('show-quote'); qAuthor.classList.add('show-quote');
                 }, 1500); 
             }, 10000); 
         }
 
-        const targetDate = new Date("June 9, 2026 00:00:00").getTime();
-        let timerInterval;
-
         function updateCountdown() {
             const now = new Date().getTime();
-            const distance = targetDate - now;
-
-            if (distance <= 0) {
+            
+            // Check if we hit the post-celebration time while on the site
+            if (now >= postCelebrationDate) {
                 clearInterval(timerInterval);
-                triggerMidnightMagic();
+                if(isSystemStarted) setupPostCelebration();
                 return;
             }
 
+            // Check if we just hit zero (12:00 AM) while on the site
+            if (now >= targetDate && now < postCelebrationDate) {
+                clearInterval(timerInterval);
+                if(isSystemStarted) triggerMidnightMagic(false);
+                return;
+            }
+
+            // Normal Countdown Calculation
+            const distance = targetDate - now;
             document.getElementById("days").innerText = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
             document.getElementById("hours").innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
             document.getElementById("minutes").innerText = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
@@ -421,20 +429,68 @@
         timerInterval = setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        function triggerMidnightMagic() {
-            document.getElementById('countdown-phase').style.opacity = '0';
-
-            setTimeout(() => {
+        function triggerMidnightMagic(instant = false) {
+            if (instant) {
                 document.getElementById('countdown-phase').style.display = 'none';
                 const celebrationPhase = document.getElementById('celebration-phase');
                 celebrationPhase.style.display = 'flex';
-
+                celebrationPhase.style.opacity = '1';
+                startMagicalFireflies();
+                startBalloons(); // Added Party Balloons
+                startMessageSequence();
+            } else {
+                document.getElementById('countdown-phase').style.opacity = '0';
                 setTimeout(() => {
-                    celebrationPhase.style.opacity = '1';
-                    startMagicalFireflies();
-                    startMessageSequence();
-                }, 100);
-            }, 1500);
+                    document.getElementById('countdown-phase').style.display = 'none';
+                    const celebrationPhase = document.getElementById('celebration-phase');
+                    celebrationPhase.style.display = 'flex';
+                    setTimeout(() => {
+                        celebrationPhase.style.opacity = '1';
+                        startMagicalFireflies();
+                        startBalloons(); // Added Party Balloons
+                        startMessageSequence();
+                    }, 100);
+                }, 1500);
+            }
+        }
+
+        // Party Balloons Logic
+        function startBalloons() {
+            const container = document.getElementById('celebration-phase');
+            const colors = ['#ff4d4d', '#ffb6c1', '#e8d0c3', '#ffd700', '#ff9999', '#b388ff'];
+
+            for (let i = 0; i < 25; i++) {
+                let balloonContainer = document.createElement('div');
+                balloonContainer.style.position = 'absolute';
+                balloonContainer.style.bottom = '-150px';
+                balloonContainer.style.left = Math.random() * 100 + 'vw';
+                balloonContainer.style.animation = `floatUp ${6 + Math.random() * 6}s ease-in-out infinite`;
+                balloonContainer.style.animationDelay = `${Math.random() * 5}s`;
+                balloonContainer.style.zIndex = '22';
+
+                let color = colors[Math.floor(Math.random() * colors.length)];
+
+                let balloon = document.createElement('div');
+                balloon.style.width = 'clamp(40px, 6vw, 50px)';
+                balloon.style.height = 'clamp(55px, 8vw, 70px)';
+                balloon.style.backgroundColor = color;
+                balloon.style.borderRadius = '50% 50% 50% 50% / 40% 40% 60% 60%';
+                balloon.style.boxShadow = 'inset -5px -5px 15px rgba(0,0,0,0.3)';
+                balloon.style.position = 'relative';
+
+                // Balloon String
+                let string = document.createElement('div');
+                string.style.position = 'absolute';
+                string.style.bottom = '-40px';
+                string.style.left = '50%';
+                string.style.width = '1px';
+                string.style.height = '40px';
+                string.style.backgroundColor = 'rgba(255,255,255,0.4)';
+
+                balloonContainer.appendChild(balloon);
+                balloonContainer.appendChild(string);
+                container.appendChild(balloonContainer);
+            }
         }
 
         const sequenceMessages = [
@@ -445,8 +501,8 @@
             "My whole heart is right here, celebrating you.",
             "Thank you for stepping into my life,",
             "And for being the most amazing person in my universe. 💖",
-            "Every glowing firefly tonight is whispering how special you are.",
-            "Are you ready for your virtual  birthday gift?",
+            "Every glowing firefly and rising balloon tonight is whispering how special you are.",
+            "Are you ready for your virtual birthday gift?",
             "Your digital universe is officially open..."
         ];
 
@@ -465,17 +521,14 @@
                         if (msgIndex < sequenceMessages.length) {
                             setTimeout(showNextMessage, 1000); 
                         } else {
-                            setTimeout(revealButton, 1000);
+                            setTimeout(() => {
+                                document.getElementById('mega-project-btn').classList.add('reveal');
+                            }, 1000);
                         }
                     }, 4000); 
                 }
             }
             showNextMessage();
-        }
-
-        function revealButton() {
-            const btn = document.getElementById('mega-project-btn');
-            btn.classList.add('reveal');
         }
 
         function startMagicalFireflies() {
@@ -498,29 +551,18 @@
                     this.alpha = 0;
                 }
                 update() {
-                    this.y -= this.speedY;
-                    this.x += Math.sin(this.angle) * this.speedX;
-                    this.angle += 0.05;
-
+                    this.y -= this.speedY; this.x += Math.sin(this.angle) * this.speedX; this.angle += 0.05;
                     if (this.alpha < 1 && this.y > canvas.height * 0.2) this.alpha += 0.02;
                     if (this.y < canvas.height * 0.2) this.alpha -= 0.01;
-
                     if (this.alpha <= 0 && this.y < canvas.height * 0.5) {
-                        this.y = canvas.height + 10;
-                        this.x = Math.random() * canvas.width;
-                        this.alpha = 0;
+                        this.y = canvas.height + 10; this.x = Math.random() * canvas.width; this.alpha = 0;
                     }
                 }
                 draw() {
-                    ctx.save();
-                    ctx.globalAlpha = this.alpha;
-                    ctx.beginPath();
+                    ctx.save(); ctx.globalAlpha = this.alpha; ctx.beginPath();
                     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = this.color;
-                    ctx.shadowBlur = 15;
-                    ctx.shadowColor = this.color;
-                    ctx.fill();
-                    ctx.restore();
+                    ctx.fillStyle = this.color; ctx.shadowBlur = 15; ctx.shadowColor = this.color;
+                    ctx.fill(); ctx.restore();
                 }
             }
 
