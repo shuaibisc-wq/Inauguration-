@@ -110,19 +110,25 @@
             text-align: center; text-shadow: 0 0 15px rgba(232, 208, 195, 0.4);
         }
 
+        /* Fixed timer for all devices (1 line) */
         .timer-container { 
-            display: flex; flex-wrap: wrap; justify-content: center; 
-            gap: clamp(15px, 4vw, 30px); margin-bottom: 40px; 
+            display: flex; flex-wrap: nowrap; 
+            justify-content: center; 
+            gap: clamp(8px, 2vw, 15px); 
+            margin-bottom: 40px; 
+            width: 100%;
         }
 
         .time-box {
             position: relative;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
             border: 1px solid rgba(232, 208, 195, 0.3);
-            padding: clamp(20px, 4vw, 30px); border-radius: 20px; 
+            padding: clamp(10px, 2.5vw, 25px); 
+            border-radius: 15px; 
             backdrop-filter: blur(15px); 
             box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(232, 208, 195, 0.05);
-            min-width: clamp(85px, 22vw, 140px); text-align: center;
+            min-width: clamp(65px, 20vw, 140px); 
+            text-align: center;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
@@ -341,11 +347,14 @@
             }, 10);
         });
 
-        // Time constraints
-        const targetDate = new Date("June 9, 2026 00:00:00").getTime();
-        const postCelebrationDate = new Date("June 9, 2026 00:30:00").getTime();
+        // Time constraints (Updated for 1:00 AM Celebration)
+        const initialTargetDate = new Date("June 9, 2026 00:00:00").getTime(); // প্রথম টার্গেট রাত ১২টা
+        const celebrationTargetDate = new Date("June 9, 2026 01:00:00").getTime(); // মেইন সেলিব্রেশন রাত ১টা
+        const postCelebrationDate = new Date("June 9, 2026 01:30:00").getTime(); // ক্লোজিং রাত ১:৩০
+        
         let timerInterval;
         let isSystemStarted = false;
+        let delayMessageShown = false; // ডিলে মেসেজ একবার দেখানোর জন্য ফ্ল্যাগ
 
         function startSystem() {
             isSystemStarted = true;
@@ -354,7 +363,8 @@
 
             const now = new Date().getTime();
 
-            if (now >= targetDate && now < postCelebrationDate) {
+            // এখানে celebrationTargetDate চেক করা হচ্ছে
+            if (now >= celebrationTargetDate && now < postCelebrationDate) {
                 triggerMidnightMagic(true); 
             } else if (now >= postCelebrationDate) {
                 setupPostCelebration();
@@ -445,13 +455,34 @@
                 return;
             }
 
-            if (now >= targetDate && now < postCelebrationDate) {
+            if (now >= celebrationTargetDate && now < postCelebrationDate) {
                 clearInterval(timerInterval);
                 if(isSystemStarted) triggerMidnightMagic(false);
                 return;
             }
 
-            const distance = targetDate - now;
+            let distance;
+
+            // নতুন লজিক: ১২টার আগে নাকি ১২টা থেকে ১টার মাঝে
+            if (now < initialTargetDate) {
+                // ১২টার আগের সময় (নরমাল কাউন্টডাউন)
+                distance = initialTargetDate - now;
+            } else if (now >= initialTargetDate && now < celebrationTargetDate) {
+                // ১২টা বেজে গেছে, এখন ১টার কাউন্টডাউন
+                distance = celebrationTargetDate - now;
+                
+                if (!delayMessageShown) {
+                    // মেইন টাইটেল চেঞ্জ করে ডিলে মেসেজ দেওয়া
+                    document.querySelector('.title-text').innerHTML = `
+                        Inauguration Delayed<br>
+                        <span style="font-size: clamp(0.9rem, 2.5vw, 1.2rem); color: #a49188; text-transform: none; letter-spacing: 2px; display: block; margin-top: 15px; font-family: 'Montserrat', sans-serif;">
+                            Waiting for the stars to align... Rescheduled to 1:00 AM.
+                        </span>
+                    `;
+                    delayMessageShown = true;
+                }
+            }
+
             document.getElementById("days").innerText = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
             document.getElementById("hours").innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
             document.getElementById("minutes").innerText = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
